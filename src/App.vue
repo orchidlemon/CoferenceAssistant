@@ -53,6 +53,13 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           Prompt 模板
         </div>
+        <div class="ndiv"></div>
+        <div class="ni" :class="{on: store.currentView==='support'}"
+             @click="nav('support')"
+             style="color:#D97706;font-weight:600">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          支持作者
+        </div>
       </nav>
       <div class="user-row">
         <div class="av" :style="{background: store.currentUser?.color || '#2563EB'}">
@@ -93,6 +100,7 @@
         <SummaryView   v-show="store.currentView==='summary'"   class="view" />
         <SettingsView  v-show="store.currentView==='settings'"  class="view" />
         <PromptsView   v-show="store.currentView==='prompts'"   class="view" />
+        <SupportView   v-show="store.currentView==='support'"   class="view" />
       </div>
     </main>
 
@@ -130,10 +138,12 @@ import SummaryView   from './views/SummaryView.vue'
 import NewMeetingModal from './components/NewMeetingModal.vue'
 import SettingsView    from './views/SettingsView.vue'
 import PromptsView     from './views/PromptsView.vue'
+import SupportView     from './views/SupportView.vue'
 
 const viewTitles = {
   dashboard: '今日概览', meetings: '全部会议', actions: 'Action 追踪器',
   people: '人员管理', prep: '会前准备', summary: '会后纪要', settings: 'AI 设置', prompts: 'Prompt 模板',
+  support: '支持作者',
 }
 const viewTitle  = computed(() => viewTitles[store.currentView] || '')
 
