@@ -283,11 +283,26 @@ function createProject() {
 }
 
 // ── History options ──────────────────────────────────
-const histOptions = reactive([
-  { id: 1, title: 'Sprint 规划对齐 · 研发团队', meta: '2026-05-08 · 5人参与 · 飞书会议 · <span style="color:var(--ai)">同一参与者 ✨</span>', selected: true  },
-  { id: 2, title: 'Q2 产品路线图评审',           meta: '2026-05-15 · 6人参与 · Zoom · <span style="color:var(--ai)">关键词匹配：Q2、Sprint ✨</span>',  selected: true  },
-  { id: 3, title: '用户增长策略周会',             meta: '2026-05-14 · 3人参与 · 腾讯会议',   selected: false },
-])
+const PLATFORM_NAMES = { zoom: 'Zoom', tencent: '腾讯会议', feishu: '飞书会议', other: '其他' }
+
+const histOptions = reactive(
+  (() => {
+    const now = new Date()
+    const currentUserName = store.currentUser?.name
+    return store.meetings
+      .filter(m =>
+        new Date(m.scheduledAt) < now &&
+        (!currentUserName || (m.participants ?? []).includes(currentUserName))
+      )
+      .sort((a, b) => new Date(b.scheduledAt) - new Date(a.scheduledAt))
+      .map(m => {
+        const dateStr = m.scheduledAt?.slice(0, 10) || ''
+        const count = (m.participants ?? []).length
+        const platLabel = PLATFORM_NAMES[m.platform] || m.platform || ''
+        return { id: m.id, title: m.title, meta: `${dateStr} · ${count}人参与 · ${platLabel}`, selected: false }
+      })
+  })()
+)
 
 // ── Submit ───────────────────────────────────────────
 function submit() {
